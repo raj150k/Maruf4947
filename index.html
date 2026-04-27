@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Love Universe 2D</title>
+
+<style>
+body {
+    margin: 0;
+    overflow: hidden;
+    background: #ffffff;
+    font-family: Arial;
+}
+
+/* CENTER BUTTON */
+#startBtn {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+    padding: 30px 50px;
+    font-size: 30px;
+    
+    border: none;
+    border-radius: 20px;
+    
+    background: #ff4d6d;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* LOVE TEXT */
+.love {
+    position: absolute;
+    font-size: 50px;
+    font-weight: bold;
+    color: #ff4d6d;
+    user-select: none;
+    cursor: pointer;
+}
+
+/* FLOAT TEXT */
+.floatText {
+    position: absolute;
+    font-size: 40px;
+    font-weight: bold;
+    color: #ff66a3;
+    pointer-events: none;
+    animation: floatUp 2s ease-out forwards;
+}
+
+@keyframes floatUp {
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-200px);
+        opacity: 0;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<button id="startBtn">এই যে মেডাম এইখানে চাপ দেন ❤️</button>
+
+<script>
+
+let loves = [];
+
+/* CREATE LOVE */
+function createLove() {
+    const el = document.createElement("div");
+    el.className = "love";
+
+    el.innerText = "💗.....I LOVE YOU......💗";
+
+    let x = Math.random() * (window.innerWidth - 200);
+    let y = Math.random() * (window.innerHeight - 100);
+
+    el.style.left = x + "px";
+    el.style.top = y + "px";
+
+    el.vx = (Math.random() - 0.5) * 2;
+    el.vy = (Math.random() - 0.5) * 2;
+
+    /* CLICK → FLOAT TEXT */
+    el.onclick = (e) => {
+        e.stopPropagation();
+        spawnText(x, y);
+    };
+
+    document.body.appendChild(el);
+    loves.push(el);
+}
+
+/* SIMPLE MOVE (2D) */
+function animate() {
+    for (let el of loves) {
+
+        let x = parseFloat(el.style.left);
+        let y = parseFloat(el.style.top);
+
+        x += el.vx;
+        y += el.vy;
+
+        if (x < 0 || x > window.innerWidth - 200) el.vx *= -1;
+        if (y < 0 || y > window.innerHeight - 100) el.vy *= -1;
+
+        el.style.left = x + "px";
+        el.style.top = y + "px";
+    }
+
+    requestAnimationFrame(animate);
+}
+
+/* FLOAT TEXT */
+function spawnText(x, y) {
+    for (let i = 0; i < 5; i++) {
+        const t = document.createElement("div");
+        t.className = "floatText";
+        t.innerText = "(^_^)..M+E..(^_^)";
+
+        t.style.left = x + "px";
+        t.style.top = y + "px";
+
+        document.body.appendChild(t);
+
+        setTimeout(() => t.remove(), 2000);
+    }
+}
+
+/* START */
+document.getElementById("startBtn").onclick = () => {
+    document.getElementById("startBtn").style.display = "none";
+
+    for (let i = 0; i < 25; i++) {
+        createLove();
+    }
+
+    animate();
+};
+
+</script>
+
+</body>
+</html>
